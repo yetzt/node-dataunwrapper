@@ -1,0 +1,9 @@
+{
+  "name": "dataunwrapper",
+  "version": "0.0.1",
+  "bin": { "dataunwrapper": "./dataunwrapper.js" },
+  "description": "extract inline data from datawrapper",
+  "main": "dataunwrapper.js",
+  "author": "yetzt <dataunwrapper@yetzt.me>",
+  "license": "Unlicense"
+}
