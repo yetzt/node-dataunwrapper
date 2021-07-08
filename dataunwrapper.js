@@ -59,7 +59,7 @@ const dataunwrapper = module.exports = function(id, fn){
 const extract = module.exports.extract = function(content, fn){
 
 	// most common
-	if (/\\"chartData/.test(content) && /\\"chartData\\":\\"(.*?[^\\])\\",/.test(content)) {
+	if (/\\"(?:data|chartData)/.test(content) && /\\"(?:data|chartData)\\":\\"(.*?[^\\])\\",/.test(content)) {
 		try {
 			var data = JSON.parse("\""+JSON.parse("\""+RegExp.$1+"\"")+"\"");
 		} catch (err) {
