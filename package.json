@@ -1,10 +1,11 @@
 {
   "name": "dataunwrapper",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "bin": { "dataunwrapper": "./dataunwrapper.js" },
   "description": "extract inline data from datawrapper",
   "main": "dataunwrapper.js",
   "author": "yetzt <dataunwrapper@yetzt.me>",
+  "contributors": ["stekhn (https://github.com/stekhn)"],
   "keywords": [
     "datawrapper",
     "scraper"
