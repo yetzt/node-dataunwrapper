@@ -1,6 +1,6 @@
 {
   "name": "dataunwrapper",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "bin": { "dataunwrapper": "./dataunwrapper.js" },
   "description": "extract inline data from datawrapper",
   "main": "dataunwrapper.js",
