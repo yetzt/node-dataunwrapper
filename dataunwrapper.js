@@ -67,16 +67,22 @@ const extract = module.exports.extract = function(content, fn){
 		} catch (err) {
 			return fn(err);
 		}
-
-		// find csv endpoint in __DW_SVELTE_PROPS__ blob
-		if (!data.hasOwnProperty("assets") || typeof data.assets !== "object") return fn(new Error("data.assets not present"));
-		const endpoint = Object.keys(data.assets).find(function(k){
-			return /\.csv$/.test(k);
-		});
-		if (!endpoint) return fn(new Error("csv url not found in data.assets"));
+		
+		let dataurl;
+		if (!!data.chart.externalData) {
+			dataurl = data.chart.externalData;
+		} else {
+			// find csv endpoint in __DW_SVELTE_PROPS__ blob
+			if (!data.hasOwnProperty("assets") || typeof data.assets !== "object") return fn(new Error("data.assets not present"));
+			const endpoint = Object.keys(data.assets).find(function(k){
+				return /\.csv$/.test(k);
+			});
+			if (!endpoint) return fn(new Error("csv url not found in data.assets"));
+			dataurl = url.resolve(data.chart.publicUrl, data.assets[endpoint].url);
+		}
 		
 		// get csv from url
-		https.get(url.resolve(data.chart.publicUrl, data.assets[endpoint].url), function(res){
+		https.get(dataurl, function(res){
 			if (res.statusCode !== 200) fn("response: http status "+res.statusCode);
 
 			let content = [];
