@@ -68,6 +68,12 @@ const extract = module.exports.extract = function(content, fn){
 		} catch (err) {
 			return fn(err);
 		}
+
+		// check for version override (datawrapper publishes the wrong version in their inline data)
+		let versionOverride = false;
+		if (/<link rel="alternate" type="application\/json\+oembed"(\s+)href="https:\/\/api\.datawrapper\.de\/v3\/oembed\?url=https:\/\/datawrapper\.dwcdn\.net\/([^\/]+)\/([0-9]+)\/&format=json"(\s+)title="oEmbed" \/>/.test(content)) {
+			versionOverride = RegExp.$3;
+		}
 		
 		let dataurl;
 		if (!!data.chart.externalData) {
@@ -79,6 +85,10 @@ const extract = module.exports.extract = function(content, fn){
 				return /\.csv$/.test(k);
 			});
 			if (!endpoint) return fn(new Error("csv url not found in data.assets"));
+			
+			// override version
+			if (versionOverride) data.chart.publicUrl = data.chart.publicUrl.replace(/\/[0-9]+\/?$/,'/'+versionOverride+'/');
+			
 			dataurl = url.resolve(data.chart.publicUrl, data.assets[endpoint].url);
 		}
 		
