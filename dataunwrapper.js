@@ -11,7 +11,7 @@ const dataunwrapper = module.exports = function(id, fn){
 	https.get('https://datawrapper.dwcdn.net/'+id+'/', function(res){
 		if (res.statusCode !== 200) fn("response: http status "+res.statusCode);
 
-		var content = [];
+		let content = [];
 
 		res.on('error', function(err){
 
@@ -34,7 +34,7 @@ const dataunwrapper = module.exports = function(id, fn){
 
 				if (res.statusCode !== 200) fn("response: http status "+res.statusCode);
 
-				var content = [];
+				let content = [];
 
 				res.on('error', function(err){
 
@@ -62,8 +62,9 @@ const extract = module.exports.extract = function(content, fn){
 	// new svelte version, extract __DW_SVELTE_PROPS__ blob
 	if (/window\.__DW_SVELTE_PROPS__/.test(content) && /window\.__DW_SVELTE_PROPS__ = JSON\.parse\("([^\n]+)"\);\n/.test(content)) {
 
+		let data;
 		try {
-			var data = JSON.parse(JSON.parse("\""+RegExp.$1+"\""));
+			data = JSON.parse(JSON.parse("\""+RegExp.$1+"\""));
 		} catch (err) {
 			return fn(err);
 		}
@@ -103,7 +104,7 @@ const extract = module.exports.extract = function(content, fn){
 	// most common
 	if (/\\"(?:data|chartData)/.test(content) && /\\"(?:data|chartData)\\":\\"(.*?[^\\])\\",/.test(content)) {
 		try {
-			var data = JSON.parse("\""+JSON.parse("\""+RegExp.$1+"\"")+"\"");
+			let data = JSON.parse("\""+JSON.parse("\""+RegExp.$1+"\"")+"\"");
 		} catch (err) {
 			return fn(err);
 		}
@@ -113,7 +114,7 @@ const extract = module.exports.extract = function(content, fn){
 	// less common
 	if (/render\(\{/.test(content) && /render\(\{(.*?)\schartData: "(.*?)",?\n(.*?)\}\);/s.test(content)) {
 		try {
-			var data = JSON.parse('"'+RegExp.$2+'"');
+			let data = JSON.parse('"'+RegExp.$2+'"');
 		} catch (err) {
 			return fn(err);
 		}
@@ -123,7 +124,7 @@ const extract = module.exports.extract = function(content, fn){
 	// way less common
 	if (/__dw\.init\(\{/.test(content) && /__dw\.init\(\{(.*?)\sdata: "(.*?)",?\n(.*?)\}\);/s.test(content)) {
 		try {
-			var data = JSON.parse('"'+RegExp.$2+'"');
+			let data = JSON.parse('"'+RegExp.$2+'"');
 		} catch (err) {
 			return fn(err);
 		}
@@ -133,7 +134,7 @@ const extract = module.exports.extract = function(content, fn){
 	// only found once
 	if (/__dw\.init\(\$\.extend\(\{/.test(content) && /__dw\.init\(\$\.extend\(\{(.*?)\sdata: "(.*?)",?\n(.*?)\}, window\.__dwParams\)\);/s.test(content)) {
 		try {
-			var data = JSON.parse('"'+RegExp.$2+'"');
+			let data = JSON.parse('"'+RegExp.$2+'"');
 		} catch (err) {
 			return fn(err);
 		}
